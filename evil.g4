@@ -4,6 +4,7 @@ grammar Evil;
   import java.util.*;
   import java.net.*;
   import java.io.*;
+  import javax.script.*;
 }
 
 @parser::members{
@@ -58,46 +59,48 @@ grammar Evil;
   }
 
   void printJSON(BufferedReader br){
-  String complete = "";
-  String line = null;
+    String complete = "";
+    String line = null;
 
-  if(br == null){
-    System.out.println("Error connecting to server!");
-    return;
-  }
-
-  try{
-    while((line = br.readLine()) != null){
-      complete += line;
+    if(br == null){
+      System.out.println("Error connecting to server!");
+      return;
     }
 
-    if(complete.equals("null")){
-      System.out.println("I have never heard of such an evil doer!");
-    }
-    else{
-      System.out.println(complete);
-    }
-  }catch(Exception e){
-    e.printStackTrace();
-    return;
-  }
-    
-  }
+    try{
+      while((line = br.readLine()) != null){
+        complete += line;
+      }
 
+      if(complete.equals("null")){
+        System.out.println("I have never heard of such an evil doer!");
+      }
+      else{
+        System.out.println(complete);
+      }
+    }catch(Exception e){
+      e.printStackTrace();
+      return;
+    }
+
+  }
 }
 
 expr: (listAll | listIndividual | listKey | setKey) '\n'?;
 
 listAll: 	'TELL ME ALL ABOUT PURE EVIL!' {
+  System.out.println("HERE IS EVERYTHING I KNOW ABOUT PURE EVIL:\n");
   printAll(getReader(null, null, null));
 };
 
 listIndividual: 'TELL ME ABOUT ' NAME {
+  System.out.println("HERE IS EVERYTHING I KNOW ABOUT "+$NAME.text+":\n");
   printAll(getReader($NAME.text, null, null));
 };
 
 listKey: 'TELL ME ABOUT ' NAME ' AND ' KEY{
-printAll(getReader($NAME.text, $KEY.text,  null));
+  System.out.println("HERE IS EVERYTHING I KNOW ABOUT "$NAME.text + " AND "+ $KEY.text)''
+  printAll(getReader($NAME.text, $KEY.text,  null));
 };
 
 setKey: 'EVIL DOER ' NAME ' DESTROYED ' KEY ' USING ' MEANS{
