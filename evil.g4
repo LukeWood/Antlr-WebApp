@@ -11,9 +11,9 @@ grammar evil;
   String initial_url = "http://lyle.smu.edu/~lswood/dataService.php";
 
   BufferedReader getReader(String id, String key, String value){
-    String url = initial_url+"?";
+    String url = initial_url;
     if(id != null){
-        url = url + "id="+id;
+        url = url+"?" + "id="+id;
     }
     if(id != null && key != null){
         url = url + "&key="+key;
@@ -58,7 +58,7 @@ grammar evil;
   }
 }
 
-expr: listAll | listIndividual | listKey | setKey;
+expr: (listAll | listIndividual | listKey | setKey) '\n'?;
 
 listAll: 	'TELL ME ALL ABOUT PURE EVIL!' {
   printAll(getReader(null, null, null));
@@ -76,6 +76,6 @@ setKey: 'EVIL DOER ' NAME ' DESTROYED ' KEY ' USING ' MEANS{
   printAll(getReader($NAME.text, $KEY.text, $MEANS.text));
 };
 
-NAME:	'evil sorcerer' | 'gandalf' | 'professor Coyle' | 'Momin';
-KEY: [a-zA-Z][\w]*;
+NAME:	'evilsorcerer' | 'gandalf' | 'professorCoyle' | 'momin';
+KEY: 'SMU' | 'kittens' | 'bunnies' | 'happiness' | 'TCU';
 MEANS: 'antlr' | 'magic' | 'steel' | 'cats';
