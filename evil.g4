@@ -46,7 +46,7 @@ grammar evil;
       complete += line;
     }
 
-    if(complete == "null"){
+    if(complete.equals("null")){
       System.out.println("I have never heard of such an evil doer!");
     }
     else{
@@ -72,9 +72,10 @@ listKey: 'TELL ME ABOUT ' NAME ' AND ' KEY{
 printAll(getReader($NAME.text, $KEY.text,  null));
 };
 
-setKey: 'EVIL DOER ' NAME ' DESTROYED ' KEY ' USING ' MEANS;
+setKey: 'EVIL DOER ' NAME ' DESTROYED ' KEY ' USING ' MEANS{
+  printAll(getReader($NAME.text, $KEY.text, $MEANS.text));
+};
 
 NAME:	'evil sorcerer' | 'gandalf' | 'professor Coyle' | 'Momin';
-NEWLINE : [\r\n]+ ;
 KEY: [a-zA-Z][\w]*;
-MEANS: 'magic' | 'steel' | 'cats';
+MEANS: 'antlr' | 'magic' | 'steel' | 'cats';
