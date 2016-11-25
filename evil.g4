@@ -1,4 +1,4 @@
-grammar evil;
+grammar Evil;
 
 @header{
   import java.util.*;
@@ -42,6 +42,31 @@ grammar evil;
     String complete = "";
     String line = null;
     try{
+      while((line = br.readLine()) != null){
+        complete += line;
+      }
+
+      if(complete.equals("null")){
+        System.out.println("I have never heard of such an evil doer!");
+      }
+      else{
+        System.out.println(complete);
+      }
+    }catch(Exception e){
+      e.printStackTrace();
+    }
+  }
+
+  void printJSON(BufferedReader br){
+  String complete = "";
+  String line = null;
+
+  if(br == null){
+    System.out.println("Error connecting to server!");
+    return;
+  }
+
+  try{
     while((line = br.readLine()) != null){
       complete += line;
     }
@@ -52,10 +77,13 @@ grammar evil;
     else{
       System.out.println(complete);
     }
-    }catch(Exception e){
+  }catch(Exception e){
     e.printStackTrace();
-    }
+    return;
   }
+    
+  }
+
 }
 
 expr: (listAll | listIndividual | listKey | setKey) '\n'?;
