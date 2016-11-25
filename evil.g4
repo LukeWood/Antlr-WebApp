@@ -8,35 +8,73 @@ grammar evil;
 
 @parser::members{
 
-  String url = "http://lyle.smu.edu/~lswood/dataService.php";
+  String initial_url = "http://lyle.smu.edu/~lswood/dataService.php";
 
-  String getAll(){
+  BufferedReader getReader(String id, String key, String value){
+    String url = initial_url+"?";
+    if(id != null){
+        url = url + "id="+id;
+    }
+    if(id != null && key != null){
+        url = url + "&key="+key;
+    }
+    if(id != null && key != null && value != null){
+        url = url + "&val="+value;
+    }
     try{
 
-      URL u = new URL(url);
-      URLConnection conn = u.openConnection();
-      BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        URL u = new URL(url);
+        URLConnection conn = u.openConnection();
+        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
-      String to_ret = "";
-      String line = null;
+        return in;
 
-      while((line = in.readLine()) != null){
-        to_ret = to_ret + line + "\n";
-      }
-      in.close();
-      return to_ret;
+    }catch(Exception e){
+          e.printStackTrace();
     }
-    catch(Exception e){
-      e.printStackTrace();
-    }
-    return "";
+    return null;
   }
+  void printAll(BufferedReader br){
+    if(br == null){
+      System.out.println("Error connecting to server!");
+      return;
+    }
+    String complete = "";
+    String line = null;
+    try{
+    while((line = br.readLine()) != null){
+      complete += line;
+    }
 
+    if(complete == "null"){
+      System.out.println("I have never heard of such an evil doer!");
+    }
+    else{
+      System.out.println(complete);
+    }
+    }catch(Exception e){
+    e.printStackTrace();
+    }
+  }
 }
 
-expr: 	'Hello' NAME {
-System.out.println(getAll());
+expr: listAll | listIndividual | listKey | setKey;
+
+listAll: 	'TELL ME ALL ABOUT PURE EVIL!' {
+  printAll(getReader(null, null, null));
 };
+
+listIndividual: 'TELL ME ABOUT ' NAME {
+  printAll(getReader($NAME.text, null, null));
+};
+
+listKey: 'TELL ME ABOUT ' NAME ' AND ' KEY{
+printAll(getReader($NAME.text, $KEY.text,  null));
+};
+
+setKey: 'EVIL DOER ' NAME ' DESTROYED ' KEY ' USING ' MEANS;
 
 NAME:	'evil sorcerer' | 'gandalf' | 'professor Coyle' | 'Momin';
 NEWLINE : [\r\n]+ ;
+KEY: [a-zA-Z][\w]*;
+MEANS: 'magic' | 'steel' | 'cats';
